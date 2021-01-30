@@ -2,6 +2,7 @@
 Created by: Khafid Prayoga
 """
 
+from check_connection import is_connected
 import click
 import boto3
 
@@ -24,10 +25,11 @@ def translate(source, destination, region):
     For more information about country code, you can visit
     AWS documentation at https://docs.aws.amazon.com/translate/index.html
     """
-    textinput = click.prompt('Original text')
-    aws = boto3.client(service_name='translate',
-                            region_name=region, use_ssl=True)
-    result = aws.translate_text(Text=textinput,
-                                SourceLanguageCode=source,
-                                TargetLanguageCode=destination)
-    click.echo(message=result.get('TranslatedText'))
+    if is_connected():
+        textinput = click.prompt('Original text')
+        aws = boto3.client(service_name='translate',
+                                region_name=region, use_ssl=True)
+        result = aws.translate_text(Text=textinput,
+                                    SourceLanguageCode=source,
+                                    TargetLanguageCode=destination)
+        click.echo(message=result.get('TranslatedText'))
